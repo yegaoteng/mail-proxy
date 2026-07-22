@@ -1,6 +1,6 @@
 export default {
   async fetch(request, env, ctx) {
-    // ===== CORS 配置 =====
+    // ===== CORS =====
     const corsHeaders = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -8,7 +8,7 @@ export default {
       'Access-Control-Max-Age': '86400',
     };
 
-    // 预检请求
+    // 预检
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
@@ -44,7 +44,6 @@ export default {
       subject,
       htmlContent,
       textContent,
-      sender,
       attachments = [],
     } = body;
 
@@ -63,22 +62,25 @@ export default {
 
     // ===== 构造 Brevo payload =====
     const payload = {
-      sender: sender || { email: env.SENDER_EMAIL },
+      sender: {
+        email: env.SENDER_EMAIL,
+        name: env.SENDER_NAME || 'Notification',
+      },
       to: typeof to === 'string' ? [{ email: to }] : to,
       subject,
       htmlContent,
       ...(textContent && { textContent }),
     };
 
-    // 附件处理（base64）
+    // 附件
     if (Array.isArray(attachments) && attachments.length > 0) {
       payload.attachment = attachments.map((att) => ({
         name: att.name,
-        content: att.content, // base64
+        content: att.content,
       }));
     }
 
-    // ===== 调用 Brevo API =====
+    // ===== 调用 Brevo =====
     const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
