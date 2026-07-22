@@ -64,7 +64,7 @@ export default {
     const payload = {
       sender: {
         email: env.SENDER_EMAIL,
-        name: env.SENDER_NAME || 'Notification',
+        name: env.SENDER_NAME || '闲时科技',
       },
       to: typeof to === 'string' ? [{ email: to }] : to,
       subject,
