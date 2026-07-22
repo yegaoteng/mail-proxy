@@ -1,0 +1,6 @@
+name = "mail-proxy"
+main = "worker.js"
+compatibility_date = "2026-07-01"
+
+[vars]
+SENDER_EMAIL = "sealblue@yenb.cc.cd"   # Brevo 里已验证的发件人
